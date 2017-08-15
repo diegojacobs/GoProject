@@ -8,8 +8,8 @@ var people Persons
 
 // Give us some seed data
 func init() {
-	RepoCreatePerson(Person{Firstname: "Carlos", Lastname: "Ruiz", Address: &Address{City: "Guatemala", State: "Guatemala"}})
-	RepoCreatePerson(Person{Firstname: "Diego", Lastname: "Jacobs", Address: &Address{City: "Guatemala", State: "Guatemala"}})
+	RepoCreatePerson(Person{Firstname: "Carlos", Lastname: "Ruiz", Address: &Address{City: "Guatemala", Country: "Guatemala"}})
+	RepoCreatePerson(Person{Firstname: "Diego", Lastname: "Jacobs", Address: &Address{City: "Guatemala", Country: "Guatemala"}})
 }
 
 func RepoFindPerson(id int) Person {
