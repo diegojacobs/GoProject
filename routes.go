@@ -35,7 +35,7 @@ var routes = Routes{
 	Route{
 		"AddPerson",
 		"POST",
-		"/people/{id}",
+		"/people",
 		CreatePersonEndpoint,
 	},
 	Route{
