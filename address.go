@@ -1,4 +1,4 @@
-package Structures
+package main
 
 type Address struct {
 	City  string `json:"city,omitempty"`
