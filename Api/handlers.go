@@ -1,4 +1,4 @@
-package main
+package Api
 
 import (
 	"encoding/json"
@@ -7,6 +7,8 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/diegojacobs/GoProject/Repositories"
+	"github.com/diegojacobs/GoProject/Structures"
 	"github.com/gorilla/mux"
 )
 
@@ -21,41 +23,47 @@ import (
 func GetPersonEndpoint(w http.ResponseWriter, req *http.Request) {
 	params := mux.Vars(req)
 	number, _ := strconv.Atoi(params["id"])
-	json.NewEncoder(w).Encode(RepoFindPerson(number))
+	json.NewEncoder(w).Encode(Repositories.RepoFindPerson(number))
 }
 
 func GetPeopleEndpoint(w http.ResponseWriter, req *http.Request) {
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
-	if err := json.NewEncoder(w).Encode(people); err != nil {
+
+	err := json.NewEncoder(w).Encode(Repositories.RepoFindPeople())
+	if err != nil {
 		panic(err)
 	}
 }
 
 func CreatePersonEndpoint(w http.ResponseWriter, req *http.Request) {
-	var person Person
-	body, err := ioutil.ReadAll(io.LimitReader(req.Body, 1048576))
+	var person Structures.Person
+	body, limitError := ioutil.ReadAll(io.LimitReader(req.Body, 1048576))
 
-	if err != nil {
-		panic(err)
+	if limitError != nil {
+		panic(limitError)
 	}
 
-	if err := req.Body.Close(); err != nil {
-		panic(err)
+	error := req.Body.Close()
+	if error != nil {
+		panic(error)
 	}
 
-	if err := json.Unmarshal(body, &person); err != nil {
+	encodeError := json.Unmarshal(body, &person)
+	if encodeError != nil {
 		w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 		w.WriteHeader(422) // unprocessable entity
-		if err := json.NewEncoder(w).Encode(err); err != nil {
-			panic(err)
+		error := json.NewEncoder(w).Encode(encodeError)
+		if error != nil {
+			panic(error)
 		}
 	}
 
-	t := RepoCreatePerson(person)
+	t := Repositories.RepoCreatePerson(person)
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusCreated)
-	if err := json.NewEncoder(w).Encode(t); err != nil {
+	err := json.NewEncoder(w).Encode(t)
+	if err != nil {
 		panic(err)
 	}
 }
@@ -63,6 +71,6 @@ func CreatePersonEndpoint(w http.ResponseWriter, req *http.Request) {
 func DeletePersonEndpoint(w http.ResponseWriter, req *http.Request) {
 	params := mux.Vars(req)
 	number, _ := strconv.Atoi(params["id"])
-	RepoDestroyPerson(number)
-	json.NewEncoder(w).Encode(people)
+	Repositories.RepoDestroyPerson(number)
+	json.NewEncoder(w).Encode(Repositories.RepoFindPeople())
 }

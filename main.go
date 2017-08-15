@@ -8,10 +8,12 @@ package main
 import (
 	"log"
 	"net/http"
+
+	"github.com/diegojacobs/GoProject/Api"
 )
 
 func main() {
-	router := NewRouter()
+	router := Api.NewRouter()
 
 	log.Fatal(http.ListenAndServe(":12345", router))
 }
