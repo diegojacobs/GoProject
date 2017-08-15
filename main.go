@@ -1,7 +1,9 @@
 package main
 
-import "net/http"
-import "log"
+import (
+	"log"
+	"net/http"
+)
 
 func main() {
 	router := NewRouter()
